@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { useState } from 'react'
 import ClickOutHandler from 'react-clickout-handler'
 import Avatar from './Avatar'
@@ -20,13 +21,19 @@ const PostCard = () => {
         <Card>
             <div className="flex gap-3">
                 <div>
-                    <Avatar />
+                    <Link href={'/profile'}>
+                        <span className="cursor-pointer">
+                            <Avatar />
+                        </span>
+                    </Link>
                 </div>
                 <div className="grow">
                     <p>
-                        <a href="" className="font-semibold">
-                            Jenna Doe
-                        </a>{' '}
+                        <Link href={'/profile'}>
+                            <span className="font-semibold hover:underline cursor-pointer">
+                                Jenna Doe
+                            </span>
+                        </Link>{' '}
                         shared a{' '}
                         <a href="" className="text-socialBlue">
                             album
