@@ -2,7 +2,7 @@ const Avatar = ({ size }) => {
     let width = 'w-12'
 
     if (size === 'large') {
-        width = 'w-36'
+        width = 'w-24 md:w-36'
     }
 
     return (
