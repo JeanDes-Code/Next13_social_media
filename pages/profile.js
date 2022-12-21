@@ -3,8 +3,25 @@ import Avatar from '../components/Avatar'
 import Card from '../components/Card'
 import Layout from '../components/Layout'
 import PostCard from '../components/PostCard'
+import { useRouter } from 'next/router'
+import AboutCard from '../components/AboutCard'
+import FriendCard from '../components/FriendCard'
+import PhotoCard from './../components/PhotoCard'
 
 export default function ProfilePage() {
+    const router = useRouter()
+    const { asPath } = router
+
+    const isPosts = asPath.includes('posts') || asPath === '/profile'
+    const isAbout = asPath.includes('about')
+    const isFriends = asPath.includes('friends')
+    const isPhotos = asPath.includes('photos')
+
+    const tabClasses =
+        'flex gap-1 px-4 py-1 items-center  border-white border-b-4'
+    const activeTabClasses =
+        'flex gap-1 px-4 py-1 items-center border-socialBlue border-b-4 text-socialBlue font-bold'
+
     return (
         <Layout>
             <Card noPadding>
@@ -27,8 +44,10 @@ export default function ProfilePage() {
                         </div>
                         <div className="mt-10 flex gap-1">
                             <Link
-                                href="/post"
-                                className="flex gap-1 px-4 py-1 items-center border-socialBlue border-b-4 text-socialBlue font-bold"
+                                href="profile/posts"
+                                className={
+                                    isPosts ? activeTabClasses : tabClasses
+                                }
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -47,8 +66,10 @@ export default function ProfilePage() {
                                 Posts
                             </Link>
                             <Link
-                                href="/post"
-                                className="flex gap-1 px-4 py-1 items-center  border-white border-b-4"
+                                href="/profile/about"
+                                className={
+                                    isAbout ? activeTabClasses : tabClasses
+                                }
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -68,8 +89,10 @@ export default function ProfilePage() {
                             </Link>
 
                             <Link
-                                href="/post"
-                                className="flex gap-1 px-4 py-1 items-center  border-white border-b-4"
+                                href="/profile/friends"
+                                className={
+                                    isFriends ? activeTabClasses : tabClasses
+                                }
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -88,8 +111,10 @@ export default function ProfilePage() {
                                 Friends
                             </Link>
                             <Link
-                                href="/post"
-                                className=" flex gap-1 px-4 py-1 items-center border-white border-b-4"
+                                href="/profile/photos"
+                                className={
+                                    isPhotos ? activeTabClasses : tabClasses
+                                }
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -111,7 +136,27 @@ export default function ProfilePage() {
                     </div>
                 </div>
             </Card>
-            <PostCard />
+            {isPosts && (
+                <div>
+                    <PostCard />
+                </div>
+            )}
+            {isAbout && (
+                <div>
+                    <AboutCard />
+                </div>
+            )}
+
+            {isFriends && (
+                <div>
+                    <FriendCard />
+                </div>
+            )}
+            {isPhotos && (
+                <div>
+                    <PhotoCard />
+                </div>
+            )}
         </Layout>
     )
 }
