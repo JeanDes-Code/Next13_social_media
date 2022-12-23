@@ -1,11 +1,15 @@
 import Link from 'next/link'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import ClickOutHandler from 'react-clickout-handler'
+import ReactTimeAgo from 'react-time-ago'
+import { UserContext } from '../context/UserContext'
 import Avatar from './Avatar'
 import Card from './Card'
 
-const PostCard = () => {
+const PostCard = ({ content, created_at, profiles: { avatar, name } }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false)
+
+    const { profile } = useContext(UserContext)
 
     function openDropdown(e) {
         e.stopPropagation()
@@ -23,7 +27,7 @@ const PostCard = () => {
                 <div>
                     <Link href={'/profile'}>
                         <span className="cursor-pointer">
-                            <Avatar />
+                            <Avatar url={avatar} />
                         </span>
                     </Link>
                 </div>
@@ -31,15 +35,15 @@ const PostCard = () => {
                     <p>
                         <Link href={'/profile'}>
                             <span className="font-semibold hover:underline cursor-pointer">
-                                Jenna Doe
+                                {name}
                             </span>
                         </Link>{' '}
-                        shared a{' '}
-                        <a href="" className="text-socialBlue">
-                            album
-                        </a>
+                        shared a post
                     </p>
-                    <p className="text-gray-500 text-sm"> 2 hours ago </p>
+                    <p className="text-gray-500 text-sm">
+                        {' '}
+                        <ReactTimeAgo date={Date.parse(created_at)} />{' '}
+                    </p>
                 </div>
                 <div className="relative">
                     <button className="text-gray-400" onClick={openDropdown}>
@@ -172,12 +176,7 @@ const PostCard = () => {
                 </div>
             </div>
             <div>
-                <p className="my-3 text-sm">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Atque ut, itaque tempora iste dolore ab neque voluptates sed
-                    ratione quia? Excepturi et eaque dignissimos sapiente.
-                    Repudiandae quidem adipisci laudantium ratione.
-                </p>
+                <p className="my-3 text-sm">{content}</p>
                 <div className="rounded-md overflow-hidden">
                     <img
                         src="https://images.unsplash.com/photo-1530841377377-3ff06c0ca713?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
@@ -240,7 +239,7 @@ const PostCard = () => {
             </div>
             <div className="flex mt-4 gap-3">
                 <div>
-                    <Avatar />
+                    <Avatar url={profile?.avatar} />
                 </div>
                 <div className="border grow rounded-full relative">
                     <textarea

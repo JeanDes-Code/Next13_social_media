@@ -1,41 +1,50 @@
-import { useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import Avatar from './Avatar'
 import Card from './Card'
 import { useSupabaseClient, useSession } from '@supabase/auth-helpers-react'
-import LoginPage from './../pages/login'
+import { UserContext } from './../context/UserContext'
 
-const PostFormCard = () => {
-    const [profile, setProfile] = useState(null)
-
+const PostFormCard = ({ onPost }) => {
+    const [content, setContent] = useState('')
     const supabase = useSupabaseClient()
     const session = useSession()
 
-    useEffect(() => {
+    const { profile } = useContext(UserContext)
+
+    const handlePost = async () => {
         supabase
-            .from('profiles')
-            .select()
-            .eq('id', session.user.id)
+            .from('posts')
+            .insert({
+                author: session.user.id,
+                content,
+            })
             .then((res) => {
-                if (res.data.length) {
-                    setProfile(res.data[0])
+                if (!res.error) {
+                    setContent('')
+                    if (onPost) {
+                        onPost()
+                    }
                 }
             })
-    }, [])
-
-    console.log(profile)
+    }
 
     return (
         <Card>
-            <div className="flex gap-2">
-                <div>
-                    <Avatar url={profile?.avatar} />
-                </div>
+            {profile && (
+                <div className="flex gap-2">
+                    <div>
+                        <Avatar url={profile.avatar} />
+                    </div>
 
-                <textarea
-                    className="grow p-3 outline-none h-14"
-                    placeholder={`Whats on your mind ${profile.name}?...`}
-                />
-            </div>
+                    <textarea
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        className="grow p-3 outline-none h-14"
+                        placeholder={`Whats on your mind ${profile.name}?...`}
+                    />
+                </div>
+            )}
+
             <div className="flex items-center gap-5 mt-2">
                 <div>
                     <button className="flex gap-1">
@@ -101,7 +110,10 @@ const PostFormCard = () => {
                 </div>
 
                 <div className="grow text-right">
-                    <button className="bg-socialBlue text-white px-6 py-1 rounded-md">
+                    <button
+                        onClick={handlePost}
+                        className="bg-socialBlue text-white px-6 py-1 rounded-md"
+                    >
                         <span className="">Share</span>
                     </button>
                 </div>
